@@ -363,4 +363,31 @@ public class TUSClient: NSObject, URLSessionTaskDelegate {
         let updated = currentUploads
         currentUploads = updated
     }
+    
+    /// A set of trusted hosts when receiving server trust challenges. A challenge with host name contained in this
+    /// set will be ignored. You can use this set to specify the self-signed site. It only will be used if you don't
+    /// specify the `authenticationChallengeResponder`.
+    ///
+    /// If `authenticationChallengeResponder` is set, this property will be ignored and the implementation of
+    /// `authenticationChallengeResponder` will be used instead.
+    open var trustedHosts: Set<String>?
+    
+    /// A responder for authentication challenge.
+    /// Downloader will forward the received authentication challenge for the downloading session to this responder.
+    open weak var authenticationChallengeResponder: AuthenticationChallengeResponsable?
+}
+
+extension TUSClient: AuthenticationChallengeResponsable {}
+
+extension TUSClient {
+    
+    public func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        authenticationChallengeResponder?.uploader(self, didReceive: challenge, completionHandler: completionHandler)
+    }
+    
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        authenticationChallengeResponder?.uploader(self, task: task, didReceive: challenge, completionHandler: completionHandler)
+    }
 }
