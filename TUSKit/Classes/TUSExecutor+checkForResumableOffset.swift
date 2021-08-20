@@ -16,6 +16,10 @@ extension TUSExecutor {
         var headRequest: URLRequest = URLRequest(url: uploadUrl)
         headRequest.httpMethod = "HEAD"
         headRequest.addValue(TUSConstants.TUSProtocolVersion, forHTTPHeaderField: "TUS-Resumable")
+        for header in customHeaders {
+            headRequest.addValue(header.value, forHTTPHeaderField: header.key)
+        }
+        
         let headTask = TUSClient.shared.tusSession.session.dataTask(with: headRequest) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {
                 let contentOffset = httpResponse.allHeaderFieldsUpper()["UPLOAD-OFFSET"]

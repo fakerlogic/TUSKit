@@ -374,10 +374,10 @@ public class TUSClient: NSObject, URLSessionTaskDelegate {
     
     /// A responder for authentication challenge.
     /// Downloader will forward the received authentication challenge for the downloading session to this responder.
-    open weak var authenticationChallengeResponder: AuthenticationChallengeResponsable?
+    open weak var authenticationChallengeResponder: AuthenticationChallengeResponsible?
 }
 
-extension TUSClient: AuthenticationChallengeResponsable {}
+extension TUSClient: AuthenticationChallengeResponsible {}
 
 extension TUSClient {
     
